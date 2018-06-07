@@ -12,25 +12,29 @@ public class Pistol : Weapon
     // Use this for initialization
     public override void Start ()
     {
-        // Start the gun off with a full clip
-        startReloadTime = Time.time;
-        passedReloadTime = 0.0f;
-
+        base.Start();
         bulletSpawn = transform.Find("BulletSpawn");
-        cam = Camera.main;
-
-        Cursor.visible = false;
-        crosshair = GameObject.Find("Crosshair").GetComponentInChildren<RectTransform>();
-        ammoText = GameObject.Find("Ammo").GetComponent<Text>();
     }
 
-    public override void PrimaryFire()
+    public override void PrimaryFire(Vector3 mousePos)
     {
         // Mouse position on the screen (In pixels)
-        Vector3 mousePos = Input.mousePosition;
+        //Vector3 mousePos = Input.mousePosition;
 
-        // Cast a ray from the mouse position though the camera, into the world
-        Ray ray = cam.ScreenPointToRay(mousePos);
+        Ray ray;
+
+        // Shoot a ray through the centre of the camera when aiming down the sights, else shoot where the mouse is
+        if (aimDown)
+        {
+            // Cast a ray from the centre of the viewport, though the camera, into the world
+            ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
+        }
+        else
+        {
+            // Cast a ray from the mouse position though the camera, into the world
+            ray = cam.ScreenPointToRay(mousePos);
+        }
+
 
         // Shoot the bullet in the same direction as the ray. (slighltly inaccurate, but only used when ray does not hit anything)
         Vector3 bulletDirection = ray.direction;
@@ -42,6 +46,7 @@ public class Pistol : Weapon
         {
             bulletDirection = (hit.point - bulletSpawn.position).normalized;
         }
+
 
         // Make sure bullet is always facing the way it will shoot towards
         Quaternion bulletRotation = Quaternion.FromToRotation(bullet.transform.forward, bulletDirection);
@@ -58,15 +63,26 @@ public class Pistol : Weapon
         reloaded = false;
     }
 
-    public override void AltFire()
+    public override void AltFire(Vector3 mousePos)
     {
-        if (ammo >= 3)
+        if (ammo >= shotsPerAlt)
         {
             // Mouse position on the screen (In pixels)
-            Vector3 mousePos = Input.mousePosition;
+            //Vector3 mousePos = Input.mousePosition;
 
-            // Cast a ray from the mouse position though the camera, into the world
-            Ray ray = cam.ScreenPointToRay(mousePos);
+            Ray ray;
+
+            // Shoot a ray through the centre of the camera when aiming down the sights, else shoot where the mouse is
+            if (aimDown)
+            {
+                // Cast a ray from the centre of the viewport, though the camera, into the world
+                ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
+            }
+            else
+            {
+                // Cast a ray from the mouse position though the camera, into the world
+                ray = cam.ScreenPointToRay(mousePos);
+            }
 
             // Shoot the bullet in the same direction as the ray. (slighltly inaccurate, but only used when ray does not hit anything)
             Vector3 bulletDirection = ray.direction;
@@ -85,7 +101,7 @@ public class Pistol : Weapon
             /* Spawn a three bullets, along with their necessary information
              * Lose three ammunition.
              */
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < shotsPerAlt; i++)
             {
                 Rigidbody currentBullet = Instantiate(bullet, bulletSpawn.position, bulletRotation);
                 currentBullet.GetComponent<BulletLogic>().Damage = damage;
