@@ -63,7 +63,7 @@ public abstract class Weapon : MonoBehaviour
     }
 	
 	// Update is called once per frame
-	public void Update ()
+	public virtual void Update ()
     {
         /* Mouse position on the screen (In pixels)
          * Clamp mouse position, so the user cannot aim too close to the screen border

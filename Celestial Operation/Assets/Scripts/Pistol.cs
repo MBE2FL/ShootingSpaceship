@@ -18,9 +18,6 @@ public class Pistol : Weapon
 
     public override void PrimaryFire(Vector3 mousePos)
     {
-        // Mouse position on the screen (In pixels)
-        //Vector3 mousePos = Input.mousePosition;
-
         Ray ray;
 
         // Shoot a ray through the centre of the camera when aiming down the sights, else shoot where the mouse is
