@@ -51,9 +51,12 @@ public class Pistol : Weapon
         /* Spawn a bullet, along with it's necessary information.
          * Lose one ammunition.
          */
-        Rigidbody currentBullet = Instantiate(bullet, bulletSpawn.position, bulletRotation);
-        currentBullet.GetComponent<BulletLogic>().Damage = damage;
-        currentBullet.GetComponent<BulletLogic>().applyForce(bulletDirection * 4000.0f);
+        //Rigidbody currentBullet = Instantiate(bullet, bulletSpawn.position, bulletRotation);
+        GameObject currentBullet = ObjectPooler.Instance.SpawnObject("Bullet", bulletSpawn.position, bulletRotation);
+        BulletLogic bulletLogic = currentBullet.GetComponent<BulletLogic>();
+        bulletLogic.Damage = damage;
+        bulletLogic.applyForce(bulletDirection * 4000.0f);
+        bulletLogic.OwnerTransform = gameObject.GetComponentInParent<Transform>();
         ammo--;
 
         // Reload this pistol
@@ -100,9 +103,12 @@ public class Pistol : Weapon
              */
             for (int i = 0; i < shotsPerAlt; i++)
             {
-                Rigidbody currentBullet = Instantiate(bullet, bulletSpawn.position, bulletRotation);
-                currentBullet.GetComponent<BulletLogic>().Damage = damage;
-                currentBullet.GetComponent<BulletLogic>().applyForce(bulletDirection * 4000.0f);
+                //Rigidbody currentBullet = Instantiate(bullet, bulletSpawn.position, bulletRotation);
+                GameObject currentBullet = ObjectPooler.Instance.SpawnObject("Bullet", bulletSpawn.position, bulletRotation);
+                BulletLogic bulletLogic = currentBullet.GetComponent<BulletLogic>();
+                bulletLogic.Damage = damage;
+                bulletLogic.applyForce(bulletDirection * 4000.0f);
+                bulletLogic.OwnerTransform = gameObject.GetComponentInParent<Transform>();
                 ammo--;
             }
 

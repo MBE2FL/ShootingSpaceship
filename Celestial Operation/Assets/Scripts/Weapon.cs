@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class Weapon : MonoBehaviour
+public abstract class Weapon : InventoryItem
 {
     // General weapon stuff
     [SerializeField]
@@ -25,7 +25,7 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField]
     private List<Enemy> extraDamageTypes;
     [SerializeField]
-    private bool primeFire;
+    protected bool primeFire;
     [SerializeField]
     protected int shotsPerPri;
     [SerializeField]
@@ -41,7 +41,7 @@ public abstract class Weapon : MonoBehaviour
     protected Camera cam;
     protected RectTransform crosshair;
     protected Text ammoText;
-    private string ammoModeText;
+    protected string ammoModeText;
 
     // Sights stuff
     private Transform sight;
@@ -55,37 +55,43 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField]
     private float weaponSmoothDamp = 6.0f;
 
+    // To disable update, while not currently in use
+    protected bool equipped = false;
+
 
     // Use this for initialization
-    public virtual void Start ()
+    public virtual void Start()
     {
         Init();
     }
-	
-	// Update is called once per frame
-	public virtual void Update ()
+
+    // Update is called once per frame
+    public virtual void Update()
     {
-        /* Mouse position on the screen (In pixels)
-         * Clamp mouse position, so the user cannot aim too close to the screen border
-         */
-        Vector3 mousePos = Input.mousePosition;
-        mousePos.x = Mathf.Clamp(mousePos.x, 50.0f, (Screen.width - 50.0f));
-        mousePos.y = Mathf.Clamp(mousePos.y, 50.0f, (Screen.height - 50.0f));
+        if (equipped)
+        {
+            /* Mouse position on the screen (In pixels)
+             * Clamp mouse position, so the user cannot aim too close to the screen border
+             */
+            Vector3 mousePos = Input.mousePosition;
+            mousePos.x = Mathf.Clamp(mousePos.x, 50.0f, (Screen.width - 50.0f));
+            mousePos.y = Mathf.Clamp(mousePos.y, 50.0f, (Screen.height - 50.0f));
 
-        // Reload and shoot the gun when necessary
-        Reload(mousePos);
+            // Reload and shoot the gun when necessary
+            Reload(mousePos);
 
-        // Switch between primary fire and alternate fire
-        SwitchModes();
+            // Switch between primary fire and alternate fire
+            SwitchModes();
 
-        // Switch between using the crosshair or the sights to aim
-        AimModes(mousePos);
+            // Switch between using the crosshair or the sights to aim
+            AimModes(mousePos);
 
-        // Move crosshair with mouse
-        crosshair.position = mousePos;
+            // Move crosshair with mouse
+            crosshair.position = mousePos;
 
-        // Update ammo text
-        ammoText.text = ammoModeText + "/" + ammo;
+            // Update ammo text
+            ammoText.text = ammoModeText + "/" + ammo;
+        }
     }
 
     private void Init()
@@ -109,7 +115,8 @@ public abstract class Weapon : MonoBehaviour
         primeFire = true;
 
         // Find sight object, for aiming down the sights
-        sight = GameObject.Find("Sight").GetComponent<Transform>();
+        if (GameObject.Find("Sight"))
+            sight = GameObject.Find("Sight").GetComponent<Transform>();
 
         // Store orginal rotation of the camera, to rotate back to after aiming down the sights
         originalRotation = cam.transform.rotation;
@@ -164,7 +171,7 @@ public abstract class Weapon : MonoBehaviour
     }
 
 
-    void SwitchModes()
+    public virtual void SwitchModes()
     {
         // Switch between primary fire and alternate fire, with the middle mouse button
         if (Input.GetMouseButtonDown(2))
@@ -212,7 +219,7 @@ public abstract class Weapon : MonoBehaviour
 
             // Move this weapon to the centre of the camera
             transform.position = Vector3.Lerp(transform.position, (targetPos - offset), 0.5f);
-            
+
             // Make sure it is always lined up with the camera
             transform.rotation = Quaternion.LookRotation(cam.transform.forward);
 
@@ -285,6 +292,42 @@ public abstract class Weapon : MonoBehaviour
                 targetPos = new Vector3(Mathf.Clamp(targetPos.x, -14.0f, 14.0f), Mathf.Clamp(targetPos.y, -7.0f, 7.0f), targetPos.z);
                 transform.LookAt(targetPos);
             }
+        }
+    }
+
+    /// <summary>
+    /// Hide this weapon, while it is not currently equipped.
+    /// </summary>
+    public override void Deactivate()
+    {
+        equipped = false;
+
+        // Turn crosshair off
+        if (crosshair.gameObject.activeSelf)
+            crosshair.gameObject.SetActive(false);
+
+        // Disable all child gameobjects of this weapon
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// Show this weapon, while it is currently equipped.
+    /// </summary>
+    public override void Activate()
+    {
+        equipped = true;
+
+        // Turn crosshair on
+        if (!crosshair.gameObject.activeSelf)
+            crosshair.gameObject.SetActive(true);
+
+        // Enable all child gameobjects of this weapon
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(true);
         }
     }
 }

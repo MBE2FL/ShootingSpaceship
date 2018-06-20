@@ -5,16 +5,25 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     [SerializeField]
-    private List<Weapon> weapons;
+    private List<InventoryItem> items;
     [SerializeField]
-    private Weapon currentWeapon;
+    private InventoryItem currentItem;
 
 	// Use this for initialization
 	void Start ()
     {
-        // Start with weapon in the first weapon slot
-        currentWeapon = weapons[0];
-	}
+        // Start with item in the first item slot
+        currentItem = items[0];
+        //currentItem.gameObject.SetActive(true);
+        currentItem.Activate();
+
+        // Make sure all other items are diabled, except for the first one
+        for (int i = 1; i < items.Count; i++)
+        {
+            //items[i].gameObject.SetActive(false);
+            items[i].Deactivate();
+        }
+    }
 	
 	// Update is called once per frame
 	void Update ()
@@ -25,46 +34,58 @@ public class Inventory : MonoBehaviour
 
     private void ScrollWeapons()
     {
-        // Scroll up, through the weapon slots
+        // Scroll up, through the item slots
         if (Input.GetAxis("Mouse ScrollWheel") > 0.0f)
         {
-            int currentSlot = weapons.IndexOf(currentWeapon);
+            int currentSlot = items.IndexOf(currentItem);
 
             // At the first slot
             if (currentSlot == 0)
             {
-                currentWeapon = weapons[weapons.Count];
+                // Deactivate previous item, and activate new item
+                currentItem.Deactivate();
+                currentItem = items[items.Count - 1];
+                currentItem.Activate();
             }
             // Not at the first slot
-            else if ((currentSlot > 0) && (currentSlot <= weapons.Count))
+            else if ((currentSlot > 0) && (currentSlot < items.Count))
             {
-                currentWeapon = weapons[currentSlot - 1];
+                // Deactivate previous item, and activate new item
+                currentItem.Deactivate();
+                currentItem = items[currentSlot - 1];
+                currentItem.Activate();
             }
             // At an invalid slot
-            else if ((currentSlot < 0) || (currentSlot > weapons.Count))
+            else if ((currentSlot < 0) || (currentSlot >= items.Count))
             {
-                Debug.LogError("Invalid weapon slot in use!");
+                Debug.LogError("Invalid item slot in use!");
             }
         }
-        // Scroll down, through the weapon slots
+        // Scroll down, through the item slots
         else if (Input.GetAxis("Mouse ScrollWheel") < 0.0f)
         {
-            int currentSlot = weapons.IndexOf(currentWeapon);
+            int currentSlot = items.IndexOf(currentItem);
 
             // At the last slot
-            if (currentSlot == weapons.Count)
+            if (currentSlot == (items.Count - 1))
             {
-                currentWeapon = weapons[0];
+                // Deactivate previous item, and activate new item
+                currentItem.Deactivate();
+                currentItem = items[0];
+                currentItem.Activate();
             }
             // Not at the last slot
-            else if ((currentSlot >= 0) && (currentSlot < weapons.Count))
+            else if ((currentSlot >= 0) && (currentSlot < (items.Count - 1)))
             {
-                currentWeapon = weapons[currentSlot + 1];
+                // Deactivate previous item, and activate new item
+                currentItem.Deactivate();
+                currentItem = items[currentSlot + 1];
+                currentItem.Activate();
             }
             // At an invalid slot
-            else if ((currentSlot < 0) || (currentSlot > weapons.Count))
+            else if ((currentSlot < 0) || (currentSlot >= items.Count))
             {
-                Debug.LogError("Invalid weapon slot in use!");
+                Debug.LogError("Invalid item slot in use!");
             }
         }
     }

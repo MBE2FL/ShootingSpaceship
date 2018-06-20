@@ -6,8 +6,9 @@ public class EnemyManager : MonoBehaviour {
 
     public int maxEnemies = 5;
     public float spawnDelay = 1.0f;
-    public Transform testEnemy;
+    //public Transform testEnemy;
     public int enemyHealth = 10;
+    public Transform player;
 
     private static EnemyManager instance;
     private int currentEnemies = 0;
@@ -64,7 +65,8 @@ public class EnemyManager : MonoBehaviour {
 
             // Reset startTime and spawn a new enemy
             startTime = Time.time;
-            Instantiate(testEnemy, spawnPos, Quaternion.identity);
+            //Instantiate(testEnemy, spawnPos, Quaternion.identity);
+            ObjectPooler.Instance.SpawnObject("Enemy", spawnPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
 
             // Increase total number of enemies in the game
             currentEnemies++;
