@@ -9,6 +9,14 @@ public class Pistol : Weapon
     private Rigidbody bullet;
     private Transform bulletSpawn;
 
+    private ParticleSystem muzzleFlash;
+
+
+    private void Awake()
+    {
+        muzzleFlash = transform.Find("Muzzle Flash").GetComponent<ParticleSystem>();
+    }
+
     // Use this for initialization
     public override void Start ()
     {
@@ -18,20 +26,21 @@ public class Pistol : Weapon
 
     public override void PrimaryFire(Vector3 mousePos)
     {
-        Ray ray;
+        // Play muzzle flash particle system
+        muzzleFlash.Play();
 
-        // Shoot a ray through the centre of the camera when aiming down the sights, else shoot where the mouse is
+        // Change transparency of this weapon when aiming down the sights
         if (aimDown)
         {
-            // Cast a ray from the centre of the viewport, though the camera, into the world
-            ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
+            // Make gun partially transparent
         }
         else
         {
-            // Cast a ray from the mouse position though the camera, into the world
-            ray = cam.ScreenPointToRay(mousePos);
+            // Make gun fully opaque
         }
 
+        // Cast a ray from the centre of the viewport, though the camera, into the world
+        Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
 
         // Shoot the bullet in the same direction as the ray. (slighltly inaccurate, but only used when ray does not hit anything)
         Vector3 bulletDirection = ray.direction;
@@ -70,19 +79,22 @@ public class Pistol : Weapon
             // Mouse position on the screen (In pixels)
             //Vector3 mousePos = Input.mousePosition;
 
-            Ray ray;
+            // Play muzzle flash particle system
+            muzzleFlash.Play();
 
-            // Shoot a ray through the centre of the camera when aiming down the sights, else shoot where the mouse is
+            // Change transparency of this weapon when aiming down the sights
             if (aimDown)
             {
-                // Cast a ray from the centre of the viewport, though the camera, into the world
-                ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
+                // Make gun partially transparent
             }
             else
             {
-                // Cast a ray from the mouse position though the camera, into the world
-                ray = cam.ScreenPointToRay(mousePos);
+                // Make gun fullly opaque
             }
+
+            // Cast a ray from the centre of the viewport, though the camera, into the world
+            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
+
 
             // Shoot the bullet in the same direction as the ray. (slighltly inaccurate, but only used when ray does not hit anything)
             Vector3 bulletDirection = ray.direction;
