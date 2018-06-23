@@ -89,7 +89,7 @@ public class Pistol : Weapon
             }
             else
             {
-                // Make gun fullly opaque
+                // Make gun fully opaque
             }
 
             // Cast a ray from the centre of the viewport, though the camera, into the world

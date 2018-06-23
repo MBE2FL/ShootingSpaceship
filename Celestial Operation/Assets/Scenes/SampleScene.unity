@@ -143,7 +143,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxEnemies: 0
   spawnDelay: 2
-  enemyHealth: 10
+  enemyHealth: 30
   player: {fileID: 338645300}
 --- !u!4 &14020985
 Transform:
@@ -180,6 +180,67 @@ MonoBehaviour:
     size: 20
     resize: 0
     currentSize: 0
+--- !u!1001 &168958798
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4748951988710984, guid: 66b1e84d0e74c814697a51755c8d572c, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4748951988710984, guid: 66b1e84d0e74c814697a51755c8d572c, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4748951988710984, guid: 66b1e84d0e74c814697a51755c8d572c, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4748951988710984, guid: 66b1e84d0e74c814697a51755c8d572c, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4748951988710984, guid: 66b1e84d0e74c814697a51755c8d572c, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4748951988710984, guid: 66b1e84d0e74c814697a51755c8d572c, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4748951988710984, guid: 66b1e84d0e74c814697a51755c8d572c, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4748951988710984, guid: 66b1e84d0e74c814697a51755c8d572c, type: 2}
+      propertyPath: m_RootOrder
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 114600224746246476, guid: 66b1e84d0e74c814697a51755c8d572c,
+        type: 2}
+      propertyPath: lifeTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1354371917889366, guid: 66b1e84d0e74c814697a51755c8d572c, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 102867488016987150, guid: 66b1e84d0e74c814697a51755c8d572c,
+        type: 2}
+      propertyPath: m_Color.rgba
+      value: 4294901861
+      objectReference: {fileID: 0}
+    - target: {fileID: 102867488016987150, guid: 66b1e84d0e74c814697a51755c8d572c,
+        type: 2}
+      propertyPath: m_FontSize
+      value: 65
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 66b1e84d0e74c814697a51755c8d572c, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &170076733
 GameObject:
   m_ObjectHideFlags: 0

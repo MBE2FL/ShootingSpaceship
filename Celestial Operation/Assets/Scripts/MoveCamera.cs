@@ -8,6 +8,7 @@ public class MoveCamera : MonoBehaviour
     private Transform camPos;
     private float currentXRotation = 0.0f;
     private float currentYRotation = 0.0f;
+    [Header("Min and max degrees of rotation")]
     [SerializeField]
     [Range(-5.0f, -60.0f)]
     private float minXDegrees;

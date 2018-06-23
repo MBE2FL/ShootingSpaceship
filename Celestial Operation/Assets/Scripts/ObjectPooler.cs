@@ -79,9 +79,9 @@ public class ObjectPooler : MonoBehaviour
             // Current object is not active in the scene
             if (!obj.activeInHierarchy)
             {
-                obj.SetActive(true);
                 obj.transform.position = position;
                 obj.transform.rotation = rotation;
+                obj.SetActive(true);
                 return obj;
             }
         }

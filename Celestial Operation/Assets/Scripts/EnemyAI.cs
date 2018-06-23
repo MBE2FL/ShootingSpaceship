@@ -11,6 +11,7 @@ public class EnemyAI : MonoBehaviour {
     private NavMeshAgent navMeshAgent;
     private EnemyManager enemyManager;
     private int health;
+    public Transform hitText;
 
 
     private float startTime;
@@ -76,6 +77,10 @@ public class EnemyAI : MonoBehaviour {
 
     public void loseHealth(int amount)
     {
+        // Display amount of damage taken, as floating text
+        FloatText floatText = ObjectPooler.Instance.SpawnObject("FloatText", transform.position, Camera.main.transform.rotation).GetComponent<FloatText>();
+        floatText.Message = amount.ToString();
+
         // Lose health
         health -= amount;
 
