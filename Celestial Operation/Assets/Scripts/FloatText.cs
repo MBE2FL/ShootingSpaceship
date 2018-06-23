@@ -48,9 +48,11 @@ public class FloatText : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        // Float from the start position to the target postion, in the specified time
         elapsedTime = Time.time;
         transform.position = Vector3.Lerp(startPos, targetPos, (elapsedTime / totalTime));
 
+        // Deactivate this float text, once it has reached it's maximum life time
         if (elapsedTime >= totalTime)
             gameObject.SetActive(false);
     }
