@@ -15,6 +15,9 @@ public class Pistol : Weapon
     private void Awake()
     {
         muzzleFlash = transform.Find("Muzzle Flash").GetComponent<ParticleSystem>();
+
+        // Find sight object, for aiming down the sights
+        sight = transform.Find("Sight").GetComponent<Transform>();
     }
 
     // Use this for initialization
@@ -67,9 +70,6 @@ public class Pistol : Weapon
         bulletLogic.applyForce(bulletDirection * 4000.0f);
         bulletLogic.OwnerTransform = gameObject.GetComponentInParent<Transform>();
         ammo--;
-
-        // Reload this pistol
-        reloaded = false;
     }
 
     public override void AltFire(Vector3 mousePos)
@@ -123,9 +123,6 @@ public class Pistol : Weapon
                 bulletLogic.OwnerTransform = gameObject.GetComponentInParent<Transform>();
                 ammo--;
             }
-
-            // Reload this pistol
-            reloaded = false;
         }
     }
 

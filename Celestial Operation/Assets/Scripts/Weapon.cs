@@ -25,7 +25,7 @@ public abstract class Weapon : InventoryItem
     [SerializeField]
     private List<Enemy> extraDamageTypes;
     [SerializeField]
-    protected bool primeFire;
+    protected bool primeFire = true;        // Start this weapon in primary fire mode
     [SerializeField]
     protected int shotsPerPri;
     [SerializeField]
@@ -33,9 +33,7 @@ public abstract class Weapon : InventoryItem
 
 
     // Reload stuff
-    protected float startReloadTime;
-    protected float passedReloadTime;
-    protected bool reloaded = true;
+    protected float reloadTimer = 0.0f;
 
     // UI stuff
     protected Camera cam;
@@ -44,10 +42,10 @@ public abstract class Weapon : InventoryItem
     protected string ammoModeText;
 
     // Sights stuff
-    private Transform sight;
+    protected Transform sight;
     protected bool aimDown = false;
     [SerializeField]
-    private float aimDownSpeed;
+    private float aimDownSpeed = 2.0f;
     private Vector3 originalPos;
     [SerializeField]
     private float weaponSmoothDamp = 6.0f;
@@ -74,8 +72,9 @@ public abstract class Weapon : InventoryItem
             mousePos.x = Mathf.Clamp(mousePos.x, 50.0f, (Screen.width - 50.0f));
             mousePos.y = Mathf.Clamp(mousePos.y, 50.0f, (Screen.height - 50.0f));
 
-            // Reload and shoot the gun when necessary
-            Reload(mousePos);
+
+            // Shoot this weapon
+            Shoot(mousePos);
 
             // Switch between primary fire and alternate fire
             SwitchModes();
@@ -93,10 +92,6 @@ public abstract class Weapon : InventoryItem
 
     private void Init()
     {
-        // Start the gun off fully reloaded
-        startReloadTime = Time.time;
-        passedReloadTime = 0.0f;
-
         // Initialize damage and fire rate
         damage = primeDamage;
         fireRate = primeFireRate;
@@ -108,13 +103,6 @@ public abstract class Weapon : InventoryItem
         ammoText = GameObject.Find("Ammo").GetComponent<Text>();
         ammoModeText = "PRI Ammo: " + shotsPerPri;
 
-        // Start this weapon in primary fire mode
-        primeFire = true;
-
-        // Find sight object, for aiming down the sights
-        if (GameObject.Find("Sight"))
-            sight = GameObject.Find("Sight").GetComponent<Transform>();
-
         // Store orginal position of this weapon, to move back to after aiming down the sights
         originalPos = transform.localPosition;
     }
@@ -123,30 +111,10 @@ public abstract class Weapon : InventoryItem
 
     public abstract void AltFire(Vector3 mousePos);
 
-    void Reload(Vector3 mousePos)
+    public virtual void Shoot(Vector3 mousePos)
     {
-        //Debug.Log("start: " + startReloadTime);
-        //Debug.Log("passed: " + passedReloadTime);
-
-        if (!reloaded)
-        {
-            // After waiting a set time, reload the gun
-            if (passedReloadTime >= fireRate)
-            {
-                reloaded = true;
-                passedReloadTime = 0.0f;
-                startReloadTime = Time.time;
-            }
-            // Track time till this weapon is reloaded
-            else if (passedReloadTime < fireRate)
-            {
-                passedReloadTime = Time.time - startReloadTime;
-            }
-        }
-
-
         // Shoot this weapon, as long as it is reloaded, and has ammo
-        if ((reloaded) && (ammo > 0))
+        if ((Time.time >= reloadTimer) && (ammo > 0))
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -154,14 +122,15 @@ public abstract class Weapon : InventoryItem
                 if (primeFire)
                 {
                     PrimaryFire(mousePos);
-                    //Debug.Log("PRIME start: " + startReloadTime);
                 }
                 // Use alternate fire
                 else
                 {
                     AltFire(mousePos);
-                    //Debug.Log("ALT start: " + startReloadTime);
                 }
+
+                // Reset reload timer.
+                reloadTimer = Time.time + fireRate;
             }
         }
     }

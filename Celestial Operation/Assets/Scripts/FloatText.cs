@@ -14,7 +14,6 @@ public class FloatText : MonoBehaviour
     private float elapsedTime;
     private TextMesh textMesh;
     private Vector3 startPos;
-    private float totalTime;
 
     public string Message
     {
@@ -38,8 +37,7 @@ public class FloatText : MonoBehaviour
     private void OnEnable()
     {
         // Reset float text, after being recyled through it's memory pool
-        //lifeTime += Time.time;
-        totalTime = lifeTime + Time.time;
+        elapsedTime = 0.0f;
         targetPos = transform.position;
         targetPos.y = targetHeight;
         startPos = transform.position;
@@ -49,11 +47,11 @@ public class FloatText : MonoBehaviour
 	void Update ()
     {
         // Float from the start position to the target postion, in the specified time
-        elapsedTime = Time.time;
-        transform.position = Vector3.Lerp(startPos, targetPos, (elapsedTime / totalTime));
+        elapsedTime += Time.deltaTime;
+        transform.position = Vector3.Lerp(startPos, targetPos, (elapsedTime / lifeTime));
 
         // Deactivate this float text, once it has reached it's maximum life time
-        if (elapsedTime >= totalTime)
+        if (elapsedTime >= lifeTime)
             gameObject.SetActive(false);
     }
 }

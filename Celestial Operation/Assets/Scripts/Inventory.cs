@@ -8,9 +8,22 @@ public class Inventory : MonoBehaviour
     private List<InventoryItem> items;
     [SerializeField]
     private InventoryItem currentItem;
+    [SerializeField]
+    private int numOfGrenades;
+    private Transform grenadeSpawn;
+    public Rigidbody grenade;
+    private Camera cam;
 
-	// Use this for initialization
-	void Start ()
+
+    private void Awake()
+    {
+        cam = Camera.main;
+        grenadeSpawn = cam.transform.Find("Grenade Spawn");
+        //grenade = Resources.Load("Prefabs/Grenade") as GameObject;
+    }
+
+    // Use this for initialization
+    void Start ()
     {
         // Start with item in the first item slot
         currentItem = items[0];
@@ -30,6 +43,7 @@ public class Inventory : MonoBehaviour
     {
         ScrollWeapons();
 
+        updateGrenades();
     }
 
     private void ScrollWeapons()
@@ -87,6 +101,19 @@ public class Inventory : MonoBehaviour
             {
                 Debug.LogError("Invalid item slot in use!");
             }
+        }
+    }
+
+    void updateGrenades()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            numOfGrenades--;
+
+            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
+
+            Rigidbody currentGrenade = Instantiate(grenade, grenadeSpawn.position, grenadeSpawn.rotation);
+            currentGrenade.AddForce(ray.direction * 200.0f);
         }
     }
 }
